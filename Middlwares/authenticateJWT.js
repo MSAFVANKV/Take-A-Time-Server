@@ -15,6 +15,7 @@ const authenticateJWT = (req, res, next) => {
                 if(err) {
                     res.json({ msg: 'wrong token !!' });
                 }
+                req.user = decoded;
                 next()
         })
       }

@@ -4,9 +4,9 @@ import bodyParser from "body-parser";
 import connectToMongoDB from "./Database/Connection.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import session from "express-session";
 import UserRouter from "./Routers/UserRouter.js";
-
+import path from "path";
+import {createOrder, captureOrder} from "./Controllers/paypalPayment.js";
 const app = express();
 
 // Load environment variables from .env file
@@ -18,16 +18,6 @@ app.use(bodyParser.json()); // Parse incoming requests with JSON payloads
 
 app.use(cookieParser())
 
-// app.use(session({
-//   secret: process.env.SESSION_SECRET, 
-//   name: process.env.SESSION_NAME,
-//   resave: false,
-//   saveUninitialized: true,
-//   cookie: {
-//       httpOnly: true,
-//       maxAge: 24 * 60 * 60 * 1000 // 24 hours
-//   }
-// }));
 
 app.use(
   cors({
@@ -38,6 +28,29 @@ app.use(
 
 
 app.use("/user", UserRouter);
+
+app.post("/my-server/create-paypal-order", async (req, res) => {
+  try {
+    const order = await createOrder(req.body);
+
+    res.json(order);
+  } catch (error) {
+    console.error("Failed to create order:", error);
+    res.status(500).json({ error: "Failed to create order." });
+  }
+});
+
+app.post("/my-server/capture-paypal-order", async (req, res) => {
+  try {
+    const { orderID } = req.body;
+    console.log('=== 2 ====')
+    const captureData = await captureOrder(orderID);
+    res.json(captureData);
+  } catch (error) {
+    console.error("Failed to create order:", error);
+    res.status(500).json({ error: "Failed to capture order." });
+  }
+});
 
 // Connect to MongoDB database using Mongoose
 connectToMongoDB();

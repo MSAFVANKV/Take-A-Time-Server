@@ -73,17 +73,6 @@ export const Login = async (req, res) => {
     return res.status(500).json({ msg: 'Server error' });
   }
 }
-
-// export const logout = (req, res) => {
-//   try {
-//       req.session.destroy();
-//       // console.log("user logged out successfully.");
-//       res.status(200).send({ msg: "user logged out successfully" });
-//   } catch (error) {
-//       console.log("Error signing out user: " + error);
-//       return res.status(500).send({ msg: "Couldn't log out." });
-//   }
-// };
 export const logout = (req, res) => {
   try {
     // Clear the JWT cookie
