@@ -24,15 +24,15 @@ import userCollectionModal from "../Modals/UserModal.js";
 export const UploadDetails = async (req, res) => {
   try {
     const userId = req.user.userId;
-    const { personalDetails, RouteDetails, paymentDetails } = req.body.formData;
-    console.log(paymentDetails,'paymentDetails');
+    const { personalDetails, RouteDetails } = req.body.formData;
+
+
     const result = await userCollectionModal.findByIdAndUpdate(
       userId,
       {
         $set: {
           personalDetails,
           RouteDetails,
-          paymentDetails,
         },
       },
       { new: true } // to return the modified document
@@ -48,3 +48,31 @@ export const UploadDetails = async (req, res) => {
     return res.status(500).json({ msg: "Internal server error" });
   }
 };
+
+
+export const checkPaymentStatus = async (req, res) => {
+  // console.log('isPaymentCompleted');
+  try {
+    const userId = req.user.userId;
+    const user = await userCollectionModal.findById(userId);
+    // console.log('user.paymentDetails',user.paymentDetails);
+
+    if (!user) {
+      return res.json({ status: 404, msg: "User not found" });
+    }
+
+    const isPaymentCompleted = user.paymentDetails && user.paymentDetails.status === "COMPLETED";
+  console.log('isPaymentCompleted',isPaymentCompleted);
+
+    if (isPaymentCompleted) {
+  console.log('isPaymentCompleted',isPaymentCompleted);
+
+      return res.json({ msg: "Payment status is COMPLETED", status: 'fulfilled' });
+    } else {
+      return res.json({ msg: "Payment status is not COMPLETED", status: 'pending' });
+    }
+    
+  } catch (error) {
+    console.log("Error in checking payment : ", error);
+  }
+}

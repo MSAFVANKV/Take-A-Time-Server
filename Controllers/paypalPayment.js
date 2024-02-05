@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
-import path from "path";
+import userCollectionModal from "../Modals/UserModal.js";
+
 
 // const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = process.env;
 const base = "https://api-m.sandbox.paypal.com";
@@ -7,11 +8,10 @@ const base = "https://api-m.sandbox.paypal.com";
 
  export const createOrder = async (data) => {
     // use the cart information passed from the front-end to calculate the purchase unit details
-    console.log(
-      "shopping cart information passed from the frontend createOrder() callback:",
-      data,
-    );
-    console.log('=== 4 ====')
+    // console.log(
+    //   "shopping cart information passed from the frontend createOrder() callback:",
+    //   data,
+    // );
   
     const accessToken = await generateAccessToken();
     const url = `${base}/v2/checkout/orders`;
@@ -80,11 +80,11 @@ export const generateAccessToken = async () => {
           Authorization: `Basic ${auth}`,
         },
       });
-      console.log('=== Response from PayPal ===', response.status, response.statusText);
+      // console.log('=== Response from PayPal ===', response.status, response.statusText);
 
       const data = await response.json();
     // const data = await handleResponse(response);
-    console.log('\n','======================data.access_token======================', data, '\n','======================data.access_token======================');
+    // console.log('\n','======================data.access_token======================', data, '\n','======================data.access_token======================');
 
       return data.access_token;
     } catch (error) {
@@ -106,14 +106,32 @@ export const generateAccessToken = async () => {
     }
   }
 
-//   const payload = {
-//     intent: "CAPTURE",
-//     purchase_units: [
-//       {
-//         amount: {
-//           currency_code: "USD",
-//           value: data.payment.cost,
-//         },
-//       },
-//     ],
-//   };
+  export const savePayment = async (req,res) => {
+    console.log('=============== savePayment =======================');
+
+    try {
+      const {data} = req.body
+      const userId = req.user.userId;
+      // console.log(data,'savePayment');
+      const result = await userCollectionModal.findByIdAndUpdate(
+        userId,
+        {
+          $set: {
+            paymentDetails:data,
+          },
+        },
+        { new: true } // to return the modified document
+      );
+  
+      if (!result) {
+        return res.json({ status: 404, msg: "User not found" });
+      }
+      console.log('Payment successfully done');
+  
+      return res.status(200).json({ msg: "Payment successfully done" ,status:'fulfilled' });
+      
+    } catch (error) {
+      
+    }
+  }
+
