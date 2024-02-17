@@ -6,7 +6,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import UserRouter from "./Routers/UserRouter.js";
 import path from "path";
-import {createOrder, captureOrder} from "./Controllers/paypalPayment.js";
+import {createOrder, captureOrder} from "./Controllers/CONTROLLES1/paypalPayment.js";
 const app = express();
 
 // Load environment variables from .env file

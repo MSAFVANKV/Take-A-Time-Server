@@ -1,4 +1,4 @@
-import userCollection from "../Modals/UserModal.js";
+import userCollection from "../../Modals/UserModal.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 

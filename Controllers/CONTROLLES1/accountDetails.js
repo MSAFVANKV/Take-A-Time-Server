@@ -1,4 +1,4 @@
-import userCollectionModal from "../Modals/UserModal.js";
+import userCollectionModal from "../../Modals/UserModal.js";
 
 // export const UploadDetails = async (req, res) => {
 //     console.log(UploadDetails,'UploadDetails');

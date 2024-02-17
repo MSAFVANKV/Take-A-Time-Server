@@ -1,7 +1,9 @@
 import express from "express";
-import { Signup, Login, logout, getUser } from "../Controllers/Create.js";
-import { UploadDetails, checkPaymentStatus } from "../Controllers/accountDetails.js";
-import { savePayment } from "../Controllers/paypalPayment.js";
+import { Signup, Login, logout, getUser } from "../Controllers/CONTROLLES1/Create.js";
+import { UploadDetails, checkPaymentStatus } from "../Controllers/CONTROLLES1/accountDetails.js";
+import { savePayment } from "../Controllers/CONTROLLES1/paypalPayment.js";
+import { sendMail, test } from "../Controllers/CONTROLLES1/forgottenPassword.js";
+
 
 import authenticateJWT from "../Middlwares/authenticateJWT.js";
 
@@ -32,6 +34,10 @@ router.get("/chech-auth", authenticateJWT, (req, res) => {
 
   /*6 . checkPaymentStatus =>*/
   router.route("/check-payment-status").get(authenticateJWT, checkPaymentStatus);
+
+  router.route("/recover-email").post(sendMail)
+  router.route("/test").post(test)
+
 
 
 router.route("/logout").get(logout);

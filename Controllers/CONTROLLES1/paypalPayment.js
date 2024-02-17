@@ -1,5 +1,5 @@
 import fetch from "node-fetch";
-import userCollectionModal from "../Modals/UserModal.js";
+import userCollectionModal from "../../Modals/UserModal.js";
 
 
 // const { PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET } = process.env;
